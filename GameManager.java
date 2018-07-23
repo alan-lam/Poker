@@ -2,7 +2,6 @@ import java.util.*;
 import java.io.IOException;
 
 public class GameManager {
-
   int[] rank = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
   int[] suit = {0, 1, 2, 3};
 
@@ -16,24 +15,18 @@ public class GameManager {
   Scanner scanner = new Scanner(System.in);
   String input = "hi";
 
-  /**
-   * Give out cards to Player 1, Player 2, and the rest on the table
-   */
   public void dealCards() {
-
     player1.card1 = deck.cardDeck.get(0);
     player1.card2 = deck.cardDeck.get(1);
-
     player2.card1 = deck.cardDeck.get(2);
     player2.card2 = deck.cardDeck.get(3);
-
     Card card5 = deck.cardDeck.get(4);
     Card card6 = deck.cardDeck.get(5);
     Card card7 = deck.cardDeck.get(6);
     Card card8 = deck.cardDeck.get(7);
     Card card9 = deck.cardDeck.get(8);
     table = new Table(card5, card6, card7, card8, card9);
-   }
+  }
 
   //https://stackoverflow.com/questions/2979383/java-clear-the-console
   public void clearScreen() {
@@ -48,9 +41,13 @@ public class GameManager {
     }
     catch(IOException | InterruptedException ex) {
     }
+  }
   
 
   //https://stackoverflow.com/questions/24104313/how-to-delay-in-java
+  /**
+   * time: in milliseconds
+   */
   public void printDelay (int time) {
     try {
       Thread.sleep(time);
@@ -68,13 +65,15 @@ public class GameManager {
   public void printGame (boolean hideCpuCards, int cardsOnTable, boolean delay) {
     int index;
 
+    clearScreen();
+
     /*move text to middle of screen*/
     for (int i = 0; i < 5; i++) {
       System.out.println("\n");
     }
 
     System.out.println("Money on the table: " + table.money 
-    + " (from Player 1: " + player1.moneyOnTable + "; from CPU: " 
+    + " (from Player 1: " + player1.moneyOnTable + "; from Player 2: " 
     + player2.moneyOnTable + ")\n");
 
     player2.printCards(hideCpuCards);
@@ -107,16 +106,18 @@ public class GameManager {
       System.out.println("\n");
       System.out.print("\033[6B\r");
     }
+  }
   
 
-  public int promptUser (String callOrCheck) {
-
-    /*option to call vs check*/
+  /**
+   * Get player move.
+   * callOrCheck: prompt player to either call or check
+   */
+  public String promptUser (String callOrCheck) {
     if (callOrCheck.equals("call")) {
       System.out.println("Enter your choice: (r)aise 50, (c)all " 
       + (player2.moneyOnTable - player1.moneyOnTable) + ", (f)old, (q)uit");
     }
-    /*option to check vs call*/
     else {
       System.out.println("Enter your choice: (r)aise 50, (c)heck, (f)old, (q)uit");
     }
@@ -143,13 +144,16 @@ public class GameManager {
     /*raise*/
     if (input.equalsIgnoreCase("r")) {
       table.addMoney(player1.subMoney (50));
+      return "raise";
     }
 
     /*call or check*/
     else if (input.equalsIgnoreCase("c")) {
       if (callOrCheck.equals("call")) {
         table.addMoney(player1.subMoney (player2.moneyOnTable - player1.moneyOnTable));
+        return "call";
       }
+      return "check";
     }
 
     /*fold*/
@@ -158,14 +162,14 @@ public class GameManager {
       player2.addMoney (table.clearMoney());
       player1.moneyOnTable = 0;
       player2.moneyOnTable = 0;
-      return 0;
+      return "fold";
     }
 
     /*quit*/
     else if (input.equalsIgnoreCase("q")) {
       System.exit(1);
     }
-    return 1;
+    return "";
   }
 
   public void printCpuDecision (String cpuMove) {
@@ -192,6 +196,10 @@ public class GameManager {
     }
   }
 
+  /**
+   * Returns array of Player 1's cards
+   * Used for ranking
+   */
   public Card[] gatherPlayerCards() {
     /*testing only*/ 
     Card[] cards = new Card[7];
@@ -220,6 +228,10 @@ public class GameManager {
     return cards;
   }
 
+  /**
+   * Returns array of Player 2's cards
+   * Used for ranking
+   */
   public Card[] gatherCpuCards() {
     Card[] cards = new Card[7];
     cards[0] = player2.card1;
@@ -230,18 +242,42 @@ public class GameManager {
     return cards;
   }
 
-  public void play() {
+  /**
+   * turn: 0 if Player 1 goes first, 1 if Player 2 goes first
+   */
+  public void startNewGame(int turn) {
+    printGame(true, 3, true);
+    if (turn == 0) {
+      System.out.println("Player 1 goes first.");
+    }
+    else {
+      System.out.println("Player 2 goes first.");
+    }
+  }
+  /**
+   * Returns true if first round is over (both players call)
+   * Returns false otherwise (one player raises)
+   */
+  public boolean firstRound() {
+    return true;
+  }
 
-    Random random = new Random();
-    int userMove = 1;
+  public void play() {
+    //int userMove = 1;
     boolean gameOver = false;
+    int betCount = 0; //can raise up to 3 times per round
 
     //while (!gameOver) {
-      int turn = random.nextInt(1);
-      clearScreen();
+      Random random = new Random();
+      //int turn = random.nextInt(1);
+      int turn = 0;
       deck.makeDeck();
       dealCards();
-      printGame(true, 3, true);
+      startNewGame(turn);
+
+      //while (player1.moneyOnTable != player2.moneyOnTable || betCount < 3) {
+        //firstRound();
+      //}
     //}
   }
 
