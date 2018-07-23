@@ -1,7 +1,9 @@
 # Poker
 
 ```
+bash
 make clean
-make
+javac GameManager.java
+javac Handranker.java
 java GameManager
 ```
