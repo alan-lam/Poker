@@ -113,7 +113,7 @@ public class GameManager {
    * Get player move.
    * callOrCheck: prompt player to either call or check
    */
-  public String promptUser (String callOrCheck) {
+  public void promptUser (String callOrCheck) {
     if (callOrCheck.equals("call")) {
       System.out.println("Enter your choice: (r)aise 50, (c)all " 
       + (player2.moneyOnTable - player1.moneyOnTable) + ", (f)old, (q)uit");
@@ -144,16 +144,13 @@ public class GameManager {
     /*raise*/
     if (input.equalsIgnoreCase("r")) {
       table.addMoney(player1.subMoney (50));
-      return "raise";
     }
 
     /*call or check*/
     else if (input.equalsIgnoreCase("c")) {
       if (callOrCheck.equals("call")) {
         table.addMoney(player1.subMoney (player2.moneyOnTable - player1.moneyOnTable));
-        return "call";
       }
-      return "check";
     }
 
     /*fold*/
@@ -162,18 +159,15 @@ public class GameManager {
       player2.addMoney (table.clearMoney());
       player1.moneyOnTable = 0;
       player2.moneyOnTable = 0;
-      return "fold";
     }
 
     /*quit*/
     else if (input.equalsIgnoreCase("q")) {
       System.exit(1);
     }
-    return "";
   }
 
   public void printCpuDecision (String cpuMove) {
-
     if (cpuMove.equals("f")) {
       System.out.println("Player 2 folds");
       player1.addMoney(table.clearMoney());
@@ -194,6 +188,7 @@ public class GameManager {
       System.out.println("Player 2 raises");
       table.addMoney(player2.subMoney(50));
     }
+    printDelay(3000);
   }
 
   /**
@@ -246,26 +241,50 @@ public class GameManager {
    * turn: 0 if Player 1 goes first, 1 if Player 2 goes first
    */
   public void startNewGame(int turn) {
-    printGame(true, 3, true);
+    printGame(true, 0, true);
     if (turn == 0) {
       System.out.println("Player 1 goes first.");
     }
     else {
       System.out.println("Player 2 goes first.");
     }
+    printDelay(3000);
   }
-  /**
-   * Returns true if first round is over (both players call)
-   * Returns false otherwise (one player raises)
-   */
-  public boolean firstRound() {
-    return true;
+
+  public void firstRound(int turn) {
+    if (turn == 0) {
+      table.addMoney(player1.subMoney(10));
+      table.addMoney(player2.subMoney(20));
+      printGame(true, 0, false);
+      bettingRound(turn);
+    }
+    else {
+      table.addMoney(player1.subMoney(20));
+      table.addMoney(player2.subMoney(10));
+      printCpuDecision(player2.cpuTurn("call"));
+    }
+  }
+
+  public void secondRound(int turn) {
+
+  }
+
+  public void bettingRound(int turn) {
+    int betCount = 0; //can raise up to 3 times per round
+    while (player1.moneyOnTable != player2.moneyOnTable && betCount < 3) {
+      if (turn == 0) {
+        promptUser("call");
+        printGame(true, 0, false);
+        printCpuDecision(player2.cpuTurn("check"));
+        printGame(true, 0, false);
+      }
+      betCount++;
+    }
   }
 
   public void play() {
     //int userMove = 1;
     boolean gameOver = false;
-    int betCount = 0; //can raise up to 3 times per round
 
     //while (!gameOver) {
       Random random = new Random();
@@ -274,10 +293,9 @@ public class GameManager {
       deck.makeDeck();
       dealCards();
       startNewGame(turn);
-
-      //while (player1.moneyOnTable != player2.moneyOnTable || betCount < 3) {
-        //firstRound();
-      //}
+      firstRound(turn);
+      printGame(true, 3, true);
+      //secondRound(turn);
     //}
   }
 
