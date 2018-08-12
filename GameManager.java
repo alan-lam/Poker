@@ -1,4 +1,5 @@
 import java.util.*;
+import java.io.IOException;
 
 public class GameManager {
   private Hashtable<Card, Boolean> cards = new Hashtable<Card, Boolean>();
@@ -20,10 +21,20 @@ public class GameManager {
     return deck;
   }
 
-  public void printDeck() {
-    ArrayList<Card> deck = makeDeck();
-    for (int i = 0; i < 9; i++) {
-      System.out.println(deck.get(i));
+  public void clearScreenAndMoveDown() {
+    String os = System.getProperty("os.name");
+    try {
+      if (os.contains("Windows")) {
+        new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+      }
+      else {
+        Runtime.getRuntime().exec("clear");
+      }
+    }
+    catch(IOException | InterruptedException ex) {}
+    
+    for (int i = 0; i < 5; i++) {
+      System.out.println("\n");
     }
   }
 }

@@ -7,4 +7,26 @@ public class Player {
     this.card1 = card1;
     this.card2 = card2;
   }
+
+  /**
+   * hidden: if true, hide CPU cards with "?"
+   * cpu: if true, print CPU's cards
+   */
+  public void printCards(boolean hidden, boolean cpu) {
+    if (cpu) {
+      System.out.println("CPU's cards:");
+    }
+    else {
+      System.out.println("Your cards:");
+    }
+    if (hidden) {
+      System.out.print("|?|  ");
+      System.out.print("|?|");
+    }
+    else {
+      System.out.print("|" + this.card1.toString() + "|  ");
+      System.out.print("|" + this.card2.toString() + "|");
+    }
+    System.out.println("\n");
+  }
 }

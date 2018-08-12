@@ -18,13 +18,13 @@ public class Card {
   }
 
   public String toString() {
-    return ranks[this.rank] + " " + suits[this.suit];
+    return ranks[this.getRank()] + " " + suits[this.getSuit()];
   }
 
   /* used for hashtable comparison */
   @Override
   public int hashCode() {
-    return this.rank + this.suit;
+    return this.getRank() + this.getSuit();
   }
 
   /* used for hashtable comparison */
