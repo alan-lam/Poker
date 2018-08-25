@@ -1,24 +1,30 @@
-<!-- https://richardschneider.github.io/cardsJS/ -->
+<div>
+  <button type="button" onclick="start()">Start Game</button>
+</div>
 
 <svg id="mySvg">
+
+  <!-- Card images from: https://richardschneider.github.io/cardsJS/ -->
+  
   <!-- CPU cards -->
-  <image xlink:href="./Images/BLUE_BACK.svg" x="30%" y="5%" height="150" width="110" />
-  <image xlink:href="./Images/3S.svg" x="60%" y="5%" height="150" width="110" />
+  <image id="cpu_card_1" xlink:href="./Images/BLUE_BACK.svg" x="30%" y="5%" height="150" width="110" />
+  <image id="cpu_card_2" xlink:href="./Images/3S.svg" x="60%" y="5%" height="150" width="110" />
 
   <!-- Table cards -->
-  <image xlink:href="./Images/AC.svg" x="5%" y="37%" height="150" width="110" />
-  <image xlink:href="./Images/4H.svg" x="25%" y="37%" height="150" width="110" />
-  <image xlink:href="./Images/KD.svg" x="45%" y="37%" height="150" width="110" />
-  <image xlink:href="./Images/QS.svg" x="65%" y="37%" height="150" width="110" />
-  <image xlink:href="./Images/BLUE_BACK.svg" x="85%" y="37%" height="150" width="110" />
+  <image id="table_card_1" xlink:href="./Images/AC.svg" x="5%" y="37%" height="150" width="110" />
+  <image id="table_card_2" xlink:href="./Images/4H.svg" x="25%" y="37%" height="150" width="110" />
+  <image id="table_card_3" xlink:href="./Images/KD.svg" x="45%" y="37%" height="150" width="110" />
+  <image id="table_card_4" xlink:href="./Images/QS.svg" x="65%" y="37%" height="150" width="110" />
+  <image id="table_card_5" xlink:href="./Images/BLUE_BACK.svg" x="85%" y="37%" height="150" width="110" />
 
   <!-- Player cards -->
-  <image xlink:href="./Images/10S.svg" x="30%" y="70%" height="150" width="110" />
-  <image xlink:href="./Images/BLUE_BACK.svg" x="60%" y="70%" height="150" width="110" />
+  <image id="player_card_1" xlink:href="./Images/10S.svg" x="30%" y="70%" height="150" width="110" />
+  <image id="player_card_2" xlink:href="./Images/BLUE_BACK.svg" x="60%" y="70%" height="150" width="110" />
 
   <text x="5%" y="5%">CPU Money: $500</text>
   <text x="5%" y="95%">Your Money: $500</text>
 </svg>
+
 <style>
   svg {
     width: 80%;
@@ -30,4 +36,21 @@
   text {
     fill: white;
   }
+  button {
+    position: fixed;
+  }
 </style>
+
+<script>
+  function start() {
+    document.getElementById("cpu_card_1").setAttribute("xlink:href", "./Images/BLUE_BACK.svg");
+    document.getElementById("cpu_card_2").setAttribute("xlink:href", "./Images/BLUE_BACK.svg");
+    document.getElementById("table_card_1").setAttribute("xlink:href", "./Images/BLUE_BACK.svg");
+    document.getElementById("table_card_2").setAttribute("xlink:href", "./Images/BLUE_BACK.svg");
+    document.getElementById("table_card_3").setAttribute("xlink:href", "./Images/BLUE_BACK.svg");
+    document.getElementById("table_card_4").setAttribute("xlink:href", "./Images/BLUE_BACK.svg");
+    document.getElementById("table_card_5").setAttribute("xlink:href", "./Images/BLUE_BACK.svg");
+    document.getElementById("player_card_1").setAttribute("xlink:href", "./Images/BLUE_BACK.svg");
+    document.getElementById("player_card_2").setAttribute("xlink:href", "./Images/BLUE_BACK.svg");
+  }
+</script>
