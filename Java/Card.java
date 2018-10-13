@@ -4,7 +4,7 @@ public class Card {
   private String[] ranks = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
   private String[] suits = {"Spades", "Clubs", "Diamonds", "Hearts"};
 
-  public Card (int rank, int suit) {
+  public Card(int rank, int suit) {
     this.rank = rank;
     this.suit = suit;
   }
@@ -29,7 +29,7 @@ public class Card {
 
   /* used for hashtable comparison */
   @Override
-  public boolean equals (Object o) {
+  public boolean equals(Object o) {
     if (((Card)o).getRank() == this.getRank() && ((Card)o).getSuit() == this.getSuit()) {
       return true;
     }

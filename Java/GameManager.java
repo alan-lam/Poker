@@ -37,4 +37,13 @@ public class GameManager {
       System.out.println("\n");
     }
   }
+
+  public void printDelay(int time) {
+      try {
+         Thread.sleep(time);
+      }
+      catch (InterruptedException e) {
+         Thread.currentThread().interrupt();
+      }
+   }
 }

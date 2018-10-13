@@ -3,7 +3,7 @@ public class Player {
   private Card card2;
   private int money = 500;
 
-  public Player (Card card1, Card card2) {
+  public Player(Card card1, Card card2) {
     this.card1 = card1;
     this.card2 = card2;
   }
@@ -28,5 +28,29 @@ public class Player {
       System.out.print("|" + this.card2.toString() + "|");
     }
     System.out.println("\n");
+  }
+
+  /**
+   * cpu: if true, print CPU's money 
+   */
+  public void printMoney(boolean cpu) {
+    if (cpu) {
+      System.out.println("CPU's Money: $" + this.money);
+    }
+    else {
+      System.out.println("Your Money: $" + this.money);
+    }
+  }
+
+  public int getMoney() {
+    return this.money;
+  }
+
+  public void addMoney(int money) {
+    this.money += money;
+  }
+
+  public void subMoney(int money) {
+    this.money -= money;
   }
 }
