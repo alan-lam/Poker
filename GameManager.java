@@ -21,7 +21,7 @@ public class GameManager {
     return deck;
   }
 
-  public void clearScreenAndMoveDown() {
+  public void clearScreen() {
     String os = System.getProperty("os.name");
     try {
       if (os.contains("Windows")) {
@@ -32,10 +32,6 @@ public class GameManager {
       }
     }
     catch(IOException | InterruptedException ex) {}
-    
-    for (int i = 0; i < 5; i++) {
-      System.out.println("\n");
-    }
   }
 
   public void printDelay(int time) {
