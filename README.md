@@ -2,5 +2,5 @@
 
 A terminal-based game
 
-![Alt text](./poker.jgp?raw=true)
+![Alt text](./poker.jpg?raw=true)
 ```
