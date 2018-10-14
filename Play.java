@@ -222,4 +222,17 @@ public class Play {
     table.clearTableMoney();
     return "fold"; // 99 (1%)
   }
+
+  public static Card[] gatherCards(Player player) {
+    Card[] playerCards = player.getCards();
+    Card[] tableCards = table.getCards();
+    Card[] totalCards = new Card[7];
+    for (int i = 0; i < 2; i++) {
+      totalCards[i] = playerCards[i];
+    }
+    for (int i = 2; i < 7; i++) {
+      totalCards[i] = tableCards[i];
+    }
+    return totalCards;
+  }
 }

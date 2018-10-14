@@ -1,18 +1,18 @@
 public class Table {
-  private Card card1;
-  private Card card2;
-  private Card card3;
-  private Card card4;
-  private Card card5;
+  private Card[] cards = new Card[5];
   private int moneyFromP1 = 0;
   private int moneyFromCPU = 0;
 
   public void setCards(Card c1, Card c2, Card c3, Card c4, Card c5) {
-    this.card1 = c1;
-    this.card2 = c2;
-    this.card3 = c3;
-    this.card4 = c4;
-    this.card5 = c5;
+    cards[0] = c1;
+    cards[1] = c2;
+    cards[2] = c3;
+    cards[3] = c4;
+    cards[4] = c5;
+  }
+
+  public Card[] getCards() {
+    return this.cards;
   }
 
   public int getMoneyFromP1() {
@@ -44,24 +44,24 @@ public class Table {
       System.out.println("\n");
     }
     else if (numberOfCards == 3) {
-      System.out.print("|" + card1.toString() + "|  ");
-      System.out.print("|" + card2.toString() + "|  ");
-      System.out.print("|" + card3.toString() + "|");
+      System.out.print("|" + cards[0].toString() + "|  ");
+      System.out.print("|" + cards[1].toString() + "|  ");
+      System.out.print("|" + cards[2].toString() + "|");
       System.out.println("\n");
     }
     else if (numberOfCards == 4) {
-      System.out.print("|" + card1.toString() + "|  ");
-      System.out.print("|" + card2.toString() + "|  ");
-      System.out.print("|" + card3.toString() + "|  ");
-      System.out.print("|" + card4.toString() + "|");
+      System.out.print("|" + cards[0].toString() + "|  ");
+      System.out.print("|" + cards[1].toString() + "|  ");
+      System.out.print("|" + cards[2].toString() + "|  ");
+      System.out.print("|" + cards[3].toString() + "|");
       System.out.println("\n");
     }
     else if (numberOfCards == 5) {
-      System.out.print("|" + card1.toString() + "|  ");
-      System.out.print("|" + card2.toString() + "|  ");
-      System.out.print("|" + card3.toString() + "|  ");
-      System.out.print("|" + card4.toString() + "|  ");
-      System.out.print("|" + card5.toString() + "|");
+      System.out.print("|" + cards[0].toString() + "|  ");
+      System.out.print("|" + cards[1].toString() + "|  ");
+      System.out.print("|" + cards[2].toString() + "|  ");
+      System.out.print("|" + cards[3].toString() + "|  ");
+      System.out.print("|" + cards[4].toString() + "|");
       System.out.println("\n");
     }
   }

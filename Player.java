@@ -1,11 +1,14 @@
 public class Player {
-  private Card card1;
-  private Card card2;
+  Card[] cards = new Card[2];
   private int money = 2000;
 
   public void setCards(Card card1, Card card2) {
-    this.card1 = card1;
-    this.card2 = card2;
+    cards[0] = card1;
+    cards[1] = card2;
+  }
+
+  public Card[] getCards() {
+    return this.cards;
   }
 
   /**
@@ -24,8 +27,8 @@ public class Player {
       System.out.print("|?|");
     }
     else {
-      System.out.print("|" + this.card1.toString() + "|  ");
-      System.out.print("|" + this.card2.toString() + "|");
+      System.out.print("|" + cards[0].toString() + "|  ");
+      System.out.print("|" + cards[1].toString() + "|");
     }
     System.out.println("\n");
   }

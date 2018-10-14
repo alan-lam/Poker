@@ -2,11 +2,11 @@ import java.util.*;
 import java.io.IOException;
 
 public class GameManager {
-  private Hashtable<Card, Boolean> cards = new Hashtable<Card, Boolean>();
-  private Random random = new Random();
 
   public ArrayList<Card> makeDeck() {
-    ArrayList<Card> deck = new ArrayList<Card>();
+    Hashtable<Card, Boolean> cards = new Hashtable<Card, Boolean>(); // used for duplicate checking
+    ArrayList<Card> deck = new ArrayList<Card>(); // holds cards that will be used in the game
+    Random random = new Random();
 
     while (deck.size() < 9) {
       int rank = random.nextInt(13);
