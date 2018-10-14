@@ -13,15 +13,14 @@ public class Play {
   public static void main(String[] args) {
 
     while (!gameOver) {
-      /* setup */
       ArrayList<Card> deck = gameManager.makeDeck();
       player1.setCards(deck.get(0), deck.get(1));
       cpu.setCards(deck.get(2), deck.get(3));
       table.setCards(deck.get(4), deck.get(5), deck.get(6), deck.get(7), deck.get(8));
       gameManager.clearScreen();
-      printBoard(true, 3);
-      
-      /* start game */
+      //printBoard(true, 3);
+      printBoard(false, 5);
+/*      
       if (p1Turn) {
         System.out.println("P1 pays small blind of $10");
         System.out.println("CPU pays big blind of $20\n\n");
@@ -47,6 +46,12 @@ public class Play {
       if (round(p1Turn, 3)) {
         continue;
       }
+*/
+      HandRanker hr = new HandRanker();
+      int p1HandScore = hr.rankHand(gatherCards(player1));
+      int cpuHandScore = hr.rankHand(gatherCards(cpu));
+      System.out.println("Your score: " + p1HandScore);
+      System.out.println("CPU score: " + cpuHandScore);
       gameOver = true;
     }
   }
@@ -231,7 +236,7 @@ public class Play {
       totalCards[i] = playerCards[i];
     }
     for (int i = 2; i < 7; i++) {
-      totalCards[i] = tableCards[i];
+      totalCards[i] = tableCards[i-2];
     }
     return totalCards;
   }

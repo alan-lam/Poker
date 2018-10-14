@@ -1,4 +1,5 @@
-public class Card {
+/* implements Comparable for sorting (in HandRanker) */
+public class Card implements Comparable<Card> {
   private int rank;
   private int suit;
   private String[] ranks = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
@@ -34,5 +35,19 @@ public class Card {
       return true;
     }
     return false;
+  }
+
+  /* need to override to implement Comparable */
+  @Override
+  public int compareTo(Card card) {
+    if (this.rank < card.rank) {
+      return -1;
+    }
+    else if (this.rank == card.rank) {
+      return 0;
+    }
+    else {
+      return 1;
+    }
   }
 }
