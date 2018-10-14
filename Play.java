@@ -2,13 +2,15 @@ import java.util.*;
 
 public class Play {
 
+  static final int DELAY = 3000;
+
   static Player player1 = new Player();
   static Player cpu = new Player();
   static Table table = new Table();
   static GameManager gameManager = new GameManager();
   static boolean gameOver = false;
   static boolean p1Turn = gameManager.decideTurn();
-  static final int DELAY = 5000;
+  static String[] handRankings = {"", "High Card", "One Pair", "Two Pair", "Three of a Kind", "Straight", "Flush", "Full House", "Four of a Kind", "Straight Flush"};
 
   public static void main(String[] args) {
 
@@ -18,11 +20,10 @@ public class Play {
       cpu.setCards(deck.get(2), deck.get(3));
       table.setCards(deck.get(4), deck.get(5), deck.get(6), deck.get(7), deck.get(8));
       gameManager.clearScreen();
-      //printBoard(true, 3);
-      printBoard(false, 5);
-/*      
+      printBoard(true, 3);
+      
       if (p1Turn) {
-        System.out.println("P1 pays small blind of $10");
+        System.out.println("You pay small blind of $10");
         System.out.println("CPU pays big blind of $20\n\n");
         player1.subMoney(10);
         cpu.subMoney(20);
@@ -30,7 +31,7 @@ public class Play {
         table.addCPUMoney(20);
       }
       else {
-        System.out.println("P1 pays big blind of $20");
+        System.out.println("You pay big blind of $20");
         System.out.println("CPU pays small blind of $10\n\n");
         player1.subMoney(20);
         cpu.subMoney(10);
@@ -46,13 +47,36 @@ public class Play {
       if (round(p1Turn, 3)) {
         continue;
       }
-*/
+
       HandRanker hr = new HandRanker();
       int p1HandScore = hr.rankHand(gatherCards(player1));
       int cpuHandScore = hr.rankHand(gatherCards(cpu));
-      System.out.println("Your score: " + p1HandScore);
-      System.out.println("CPU score: " + cpuHandScore);
-      gameOver = true;
+      System.out.println("Your score: " + handRankings[p1HandScore]);
+      System.out.println("CPU score: " + handRankings[cpuHandScore]);
+      gameManager.printDelay(5000);
+
+      if (p1HandScore > cpuHandScore) {
+        System.out.println("You win this round");
+        player1.addMoney(table.getMoneyFromCPU() + table.getMoneyFromP1());
+      }
+      else if (p1HandScore < cpuHandScore) {
+        System.out.println("You lost this round");
+        cpu.addMoney(table.getMoneyFromCPU() + table.getMoneyFromP1());
+      }
+      table.clearTableMoney();
+
+      System.out.println("Press \"Enter\" to continue");
+      Scanner s = new Scanner(System.in);
+      String nextRound = s.nextLine();
+
+      if (player1.getMoney() == 0) {
+        System.out.println("You lost!");
+        gameOver = true;
+      }
+      else if (cpu.getMoney() == 0) {
+        System.out.println("You won!");
+        gameOver = true;
+      }
     }
   }
 
@@ -64,13 +88,17 @@ public class Play {
     /* raise 3 times before ending round */
     int p1RaiseCounter = 0;
     int cpuRaiseCounter = 0;
+    String p1Move = "";
+    String cpuMove = "";
 
     gameManager.printDelay(DELAY);
-    printBoard(true, roundNumber+2);
 
     if (p1RoundTurn) {
       while (p1RaiseCounter < 3 && cpuRaiseCounter < 3) {
-        String p1Move = promptUser();
+        printBoard(true, roundNumber+2);
+        gameManager.printDelay(DELAY);
+
+        p1Move = promptUser();
         if (p1Move.equals("fold")) {
           System.out.println("Round " + roundNumber + " done");
           gameManager.printDelay(DELAY);
@@ -81,8 +109,17 @@ public class Play {
           p1RaiseCounter++;
         }
 
-        String cpuMove = getCPUMove();
+        /* if cpu raises and then player calls, then round should end */
+        if (cpuRaiseCounter > 0 && p1Move.substring(0,5).equals("call")) {
+          System.out.println("Round " + roundNumber + " done");
+          gameManager.printDelay(DELAY);
+          return false;
+        }
+
+        cpuMove = getCPUMove();
         System.out.println("CPU's move: " + cpuMove + "\n");
+        gameManager.printDelay(DELAY);
+
         if (cpuMove.equals("fold")) {
           System.out.println("Round " + roundNumber + " done");
           gameManager.printDelay(DELAY);
@@ -102,8 +139,13 @@ public class Play {
     }
     else {
       while (p1RaiseCounter < 3 && cpuRaiseCounter < 3) {
-        String cpuMove = getCPUMove();
+        printBoard(true, roundNumber+2);
+        gameManager.printDelay(DELAY);
+
+        cpuMove = getCPUMove();
         System.out.println("CPU's move: " + cpuMove + "\n");
+        gameManager.printDelay(DELAY);
+
         if (cpuMove.equals("fold")) {
           System.out.println("Round " + roundNumber + " done");
           gameManager.printDelay(DELAY);
@@ -114,10 +156,17 @@ public class Play {
           cpuRaiseCounter++;
         }
 
-        gameManager.printDelay(DELAY);
-        printBoard(true, 3);
+        /* if player raises and then cpu calls, then round should end */
+        if (p1RaiseCounter > 0 && cpuMove.substring(0,5).equals("call")) {
+          System.out.println("Round " + roundNumber + " done");
+          gameManager.printDelay(DELAY);
+          return false;
+        }
 
-        String p1Move = promptUser();
+        gameManager.printDelay(DELAY);
+        printBoard(true, roundNumber+2);
+
+        p1Move = promptUser();
         if (p1Move.equals("fold")) {
           System.out.println("Round " + roundNumber + " done");
           gameManager.printDelay(DELAY);
@@ -143,6 +192,7 @@ public class Play {
    * numOfCardsFaceUp: 3, 4, or 5
    */
   public static void printBoard(boolean hideCpuCards, int numOfCardsFaceUp) {
+    System.out.println("---------------------------------------------------------------------");
     player1.printMoney(false);
     cpu.printMoney(true);
     table.printMoney();
@@ -150,6 +200,7 @@ public class Play {
     cpu.printCards(hideCpuCards, true);
     table.printCards(numOfCardsFaceUp);
     player1.printCards(false, false);
+    System.out.println("---------------------------------------------------------------------");
   }
 
   /**
@@ -192,7 +243,6 @@ public class Play {
       else if (input.equalsIgnoreCase("f")) {
         cpu.addMoney(table.getMoneyFromCPU() + table.getMoneyFromP1());
         table.clearTableMoney();
-        System.out.println("fold");
         return "fold";
       }
       /* quit */
