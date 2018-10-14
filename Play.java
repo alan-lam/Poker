@@ -32,7 +32,10 @@ public class Play {
    * p1GoesFirst: if true, do gameflow for p1 going first
    */
   public static void round1(boolean p1GoesFirst) {
-    int raiseCounter = 0; // raise 3 times before ending round
+    /* raise 3 times before ending round */
+    int p1RaiseCounter = 0;
+    int cpuRaiseCounter = 0;
+
     printBoard(true, 3);
     if (p1GoesFirst) {
       System.out.println("P1 pays small blind of $10");
@@ -42,12 +45,15 @@ public class Play {
       cpu.subMoney(20);
       table.addP1Money(10);
       table.addCPUMoney(20);
-      while (raiseCounter < 3) {
+      while (p1RaiseCounter < 3 && cpuRaiseCounter < 3) {
         printBoard(true, 3);
         String p1Move = promptUser();
         if (p1Move.equals("fold")) {
           System.out.println("Round 1 done");
           return;
+        }
+        else if (p1Move.equals("raise")) {
+          p1RaiseCounter++;
         }
         String cpuMove = getCPUMove();
         System.out.println("CPU's move: " + cpuMove + "\n");
@@ -55,13 +61,13 @@ public class Play {
           System.out.println("Round 1 done");
           return;
         }
-        gameManager.printDelay(3000);
-        if (table.getMoneyFromCPU() - table.getMoneyFromP1() == 0 && cpuMove.equals("call 0")) {
+        else if (cpuMove.equals("call 0")) {
           System.out.println("Round 1 done");
           return;
         }
-        if (p1Move.equals("raise") && cpuMove.substring(0,5).equals("raise")) {
-          raiseCounter++;
+        /* cpu raised */
+        else {
+          cpuRaiseCounter++;
         }
       }
     }
@@ -73,7 +79,7 @@ public class Play {
       cpu.subMoney(10);
       table.addP1Money(20);
       table.addCPUMoney(10);
-      while (raiseCounter < 3) {
+      while (p1RaiseCounter < 3 && cpuRaiseCounter < 3) {
         printBoard(true, 3);
         String cpuMove = getCPUMove();
         System.out.println("CPU's move: " + cpuMove + "\n");
@@ -81,18 +87,23 @@ public class Play {
           System.out.println("Round 1 done");
           return;
         }
+        else if (cpuMove.equals("raise")) {
+          cpuRaiseCounter++;
+        }
+        gameManager.printDelay(3000);
+        printBoard(true, 3);
         String p1Move = promptUser();
         if (p1Move.equals("fold")) {
           System.out.println("Round 1 done");
           return;
         }
-        gameManager.printDelay(3000);
-        if (table.getMoneyFromCPU() - table.getMoneyFromP1() == 0 && p1Move.equals("call 0")) {
+        else if (p1Move.equals("call 0")) {
           System.out.println("Round 1 done");
           return;
         }
-        if (p1Move.equals("raise") && cpuMove.substring(0,5).equals("raise")) {
-          raiseCounter++;
+        /* p1 raised */
+        else {
+          p1RaiseCounter++;
         }
       }
     }
