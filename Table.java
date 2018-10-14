@@ -31,6 +31,11 @@ public class Table {
     this.moneyFromCPU += money;
   }
 
+  public void clearTableMoney() {
+    this.moneyFromP1 = 0;
+    this.moneyFromCPU = 0;
+  }
+
   /**
    * numberOfCards: number of cards to display on table
    */

@@ -7,6 +7,7 @@ public class Play {
   static Table table;
   static GameManager gameManager = new GameManager();
   static boolean gameOver = false;
+  static boolean p1Turn;
 
   public static void main(String[] args) {
 
@@ -16,19 +17,23 @@ public class Play {
       player1 = new Player(deck.get(0), deck.get(1));
       cpu = new Player(deck.get(2), deck.get(3));
       table = new Table(deck.get(4), deck.get(5), deck.get(6), deck.get(7), deck.get(8));
+      p1Turn = gameManager.decideTurn();
       gameManager.clearScreen();
       
       /* start game */
-      round1(true);
-      round2();
-      round3();
+      round1(p1Turn);
+      round2(p1Turn);
+      round3(p1Turn);
       gameOver = true;
     }
   }
 
+  /**
+   * p1GoesFirst: if true, do gameflow for p1 going first
+   */
   public static void round1(boolean p1GoesFirst) {
     int raiseCounter = 0; // raise 3 times before ending round
-    printBoard(true);
+    printBoard(true, 3);
     if (p1GoesFirst) {
       System.out.println("P1 pays small blind of $10");
       System.out.println("CPU pays big blind of $20\n\n");
@@ -38,8 +43,12 @@ public class Play {
       table.addP1Money(10);
       table.addCPUMoney(20);
       while (raiseCounter < 3) {
-        printBoard(true);
+        printBoard(true, 3);
         String p1Move = promptUser();
+        if (p1Move.equals("fold")) {
+          System.out.println("Round 1 done");
+          return;
+        }
         String cpuMove = getCPUMove();
         System.out.println("CPU's move: " + cpuMove + "\n");
         gameManager.printDelay(3000);
@@ -55,34 +64,43 @@ public class Play {
     System.out.println("Round 1 done");
   }
 
-  public static void round2() {
+  /**
+   * p1Turn: if true, prompt user for turn first
+   */
+  public static void round2(boolean p1Turn) {
     System.out.println("Round 2 done");
   }
 
-  public static void round3() {
+  /**
+   * p1Turn: if true, prompt user for turn first
+   */
+  public static void round3(boolean p1Turn) {
     System.out.println("Round 3 done");
   }
 
   /**
    * hideCpuCards: if true, cpu cards will be hidden
    */
-  public static void printBoard(boolean hideCpuCards) {
+  public static void printBoard(boolean hideCpuCards, int numOfCardsFaceUp) {
     player1.printMoney(false);
     cpu.printMoney(true);
     table.printMoney();
     System.out.println("\n");
     cpu.printCards(hideCpuCards, true);
-    table.printCards(5);
+    table.printCards(numOfCardsFaceUp);
     player1.printCards(false, false);
   }
 
+  /**
+   * Also performs calculations for adding/subtracting money to/from player/table
+   * return: user's move ("raise", "call n", "fold")
+   */
   public static String promptUser() {
     int difference = table.getMoneyFromCPU() - table.getMoneyFromP1();
     int raise = 50 + difference;
 
     System.out.println("Enter your choice: (r)aise " + raise + ", (c)all " + difference + ", (f)old, (q)uit");
 
-    /*get user choice*/
     String input;
     Scanner scanner = new Scanner(System.in);
     if (scanner.hasNext()) {
@@ -111,7 +129,10 @@ public class Play {
       }
       /* fold */
       else if (input.equalsIgnoreCase("f")) {
-        System.out.println("Fold");
+        cpu.addMoney(table.getMoneyFromCPU() + table.getMoneyFromP1());
+        table.clearTableMoney();
+        System.out.println("fold");
+        return "fold";
       }
       /* quit */
       else if (input.equalsIgnoreCase("q")) {
@@ -121,19 +142,28 @@ public class Play {
     return "";
   }
 
+  /**
+   * Also performs calculations for adding/subtracting money to/from player/table
+   * return: CPU's move ("raise", "call n", "fold")
+   */
   public static String getCPUMove() {
     int difference = table.getMoneyFromP1() - table.getMoneyFromCPU();
     int raise = 50 + difference;
 
     Random random = new Random();
-    int n = random.nextInt(101);
-    if (n < 100) {
+    int n = random.nextInt(100);
+    if (n < 49) { // 0-48 (49%)
       cpu.subMoney(raise);
       table.addCPUMoney(raise);
       return "raise " + raise;
     }
-    cpu.subMoney(difference);
-    table.addCPUMoney(difference);
-    return "call " + difference;
+    else if (n < 99) { // 49-98 (50%)
+      cpu.subMoney(difference);
+      table.addCPUMoney(difference);
+      return "call " + difference;
+    }
+    player1.addMoney(table.getMoneyFromCPU() + table.getMoneyFromP1());
+    table.clearTableMoney();
+    return "fold"; // 99 (1%)
   }
 }

@@ -34,12 +34,27 @@ public class GameManager {
     catch(IOException | InterruptedException ex) {}
   }
 
+  /**
+   * time: number of milliseconds to pause program
+   */
   public void printDelay(int time) {
-      try {
-         Thread.sleep(time);
-      }
-      catch (InterruptedException e) {
-         Thread.currentThread().interrupt();
-      }
-   }
+    try {
+      Thread.sleep(time);
+    }
+    catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+    }
+  }
+
+  /**
+   * return: true if p1 goes first
+   */
+  public boolean decideTurn() {
+    Random random = new Random();
+    int n = random.nextInt(2);
+    if (n == 0) {
+      return true;
+    }
+    return false;
+  }
 }
