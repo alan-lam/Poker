@@ -51,8 +51,43 @@ public class Play {
         }
         String cpuMove = getCPUMove();
         System.out.println("CPU's move: " + cpuMove + "\n");
+        if (cpuMove.equals("fold")) {
+          System.out.println("Round 1 done");
+          return;
+        }
         gameManager.printDelay(3000);
         if (table.getMoneyFromCPU() - table.getMoneyFromP1() == 0 && cpuMove.equals("call 0")) {
+          System.out.println("Round 1 done");
+          return;
+        }
+        if (p1Move.equals("raise") && cpuMove.substring(0,5).equals("raise")) {
+          raiseCounter++;
+        }
+      }
+    }
+    else {
+      System.out.println("P1 pays big blind of $20");
+      System.out.println("CPU pays small blind of $10\n\n");
+      gameManager.printDelay(3000);
+      player1.subMoney(20);
+      cpu.subMoney(10);
+      table.addP1Money(20);
+      table.addCPUMoney(10);
+      while (raiseCounter < 3) {
+        printBoard(true, 3);
+        String cpuMove = getCPUMove();
+        System.out.println("CPU's move: " + cpuMove + "\n");
+        if (cpuMove.equals("fold")) {
+          System.out.println("Round 1 done");
+          return;
+        }
+        String p1Move = promptUser();
+        if (p1Move.equals("fold")) {
+          System.out.println("Round 1 done");
+          return;
+        }
+        gameManager.printDelay(3000);
+        if (table.getMoneyFromCPU() - table.getMoneyFromP1() == 0 && p1Move.equals("call 0")) {
           System.out.println("Round 1 done");
           return;
         }
