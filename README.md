@@ -2,7 +2,7 @@
 
 A terminal-based game
 
-![Alt text](./poker.jpg?raw=true)
+![Alt text](./readme-pics/poker.jpg?raw=true)
 
 ## Instructions
 1. Download ZIP and extract file
