@@ -47,6 +47,7 @@ public class Play {
       if (round(p1Turn, 3)) {
         continue;
       }
+      printBoard(false, 5);
 
       HandRanker hr = new HandRanker();
       int p1HandScore = hr.rankHand(gatherCards(player1));
@@ -85,7 +86,7 @@ public class Play {
    * return: true if one player folds
    */
   public static boolean round(boolean p1RoundTurn, int roundNumber) {
-    /* raise 3 times before ending round */
+    /* raise 3 times in a row before ending round */
     int p1RaiseCounter = 0;
     int cpuRaiseCounter = 0;
     String p1Move = "";
@@ -108,9 +109,12 @@ public class Play {
         else if (p1Move.equals("raise")) {
           p1RaiseCounter++;
         }
+        else {
+          p1RaiseCounter = 0;
+        }
 
         /* if cpu raises and then player calls, then round should end */
-        if (cpuRaiseCounter > 0 && p1Move.substring(0,5).equals("call")) {
+        if (cpuRaiseCounter > 0 && p1Move.substring(0,4).equals("call")) {
           System.out.println("Round " + roundNumber + " done");
           gameManager.printDelay(DELAY);
           return false;
@@ -126,7 +130,7 @@ public class Play {
           p1Turn = false;
           return true;
         }
-        else if (cpuMove.equals("call 0")) {
+        else if (cpuMove.substring(0,4).equals("call")) {
           System.out.println("Round " + roundNumber + " done");
           gameManager.printDelay(DELAY);
           return false;
@@ -155,9 +159,12 @@ public class Play {
         else if (cpuMove.equals("raise")) {
           cpuRaiseCounter++;
         }
+        else {
+          cpuRaiseCounter = 0;
+        }
 
         /* if player raises and then cpu calls, then round should end */
-        if (p1RaiseCounter > 0 && cpuMove.substring(0,5).equals("call")) {
+        if (p1RaiseCounter > 0 && cpuMove.substring(0,4).equals("call")) {
           System.out.println("Round " + roundNumber + " done");
           gameManager.printDelay(DELAY);
           return false;
@@ -173,7 +180,7 @@ public class Play {
           p1Turn = true;
           return true;
         }
-        else if (p1Move.equals("call 0")) {
+        else if (p1Move.substring(0,4).equals("call")) {
           System.out.println("Round " + roundNumber + " done");
           gameManager.printDelay(DELAY);
           return false;
