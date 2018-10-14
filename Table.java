@@ -7,12 +7,12 @@ public class Table {
   private int moneyFromP1 = 0;
   private int moneyFromCPU = 0;
 
-  public Table(Card card1, Card card2, Card card3, Card card4, Card card5) {
-    this.card1 = card1;
-    this.card2 = card2;
-    this.card3 = card3;
-    this.card4 = card4;
-    this.card5 = card5;
+  public void setCards(Card c1, Card c2, Card c3, Card c4, Card c5) {
+    this.card1 = c1;
+    this.card2 = c2;
+    this.card3 = c3;
+    this.card4 = c4;
+    this.card5 = c5;
   }
 
   public int getMoneyFromP1() {

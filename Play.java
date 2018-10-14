@@ -2,68 +2,92 @@ import java.util.*;
 
 public class Play {
 
-  static Player player1;
-  static Player cpu;
-  static Table table;
+  static Player player1 = new Player();
+  static Player cpu = new Player();
+  static Table table = new Table();
   static GameManager gameManager = new GameManager();
   static boolean gameOver = false;
-  static boolean p1Turn;
+  static boolean p1Turn = gameManager.decideTurn();
+  static final int DELAY = 5000;
 
   public static void main(String[] args) {
 
     while (!gameOver) {
       /* setup */
       ArrayList<Card> deck = gameManager.makeDeck();
-      player1 = new Player(deck.get(0), deck.get(1));
-      cpu = new Player(deck.get(2), deck.get(3));
-      table = new Table(deck.get(4), deck.get(5), deck.get(6), deck.get(7), deck.get(8));
-      p1Turn = gameManager.decideTurn();
+      player1.setCards(deck.get(0), deck.get(1));
+      cpu.setCards(deck.get(2), deck.get(3));
+      table.setCards(deck.get(4), deck.get(5), deck.get(6), deck.get(7), deck.get(8));
       gameManager.clearScreen();
+      printBoard(true, 3);
       
       /* start game */
-      round1(p1Turn);
-      round2(p1Turn);
-      round3(p1Turn);
+      if (p1Turn) {
+        System.out.println("P1 pays small blind of $10");
+        System.out.println("CPU pays big blind of $20\n\n");
+        player1.subMoney(10);
+        cpu.subMoney(20);
+        table.addP1Money(10);
+        table.addCPUMoney(20);
+      }
+      else {
+        System.out.println("P1 pays big blind of $20");
+        System.out.println("CPU pays small blind of $10\n\n");
+        player1.subMoney(20);
+        cpu.subMoney(10);
+        table.addP1Money(20);
+        table.addCPUMoney(10);
+      }
+      if (round(p1Turn, 1)) {
+        continue;
+      }
+      if (round(p1Turn, 2)) {
+        continue;
+      }
+      if (round(p1Turn, 3)) {
+        continue;
+      }
       gameOver = true;
     }
   }
 
   /**
-   * p1GoesFirst: if true, do gameflow for p1 going first
+   * roundNumber: 1, 2, or 3
+   * return: true if one player folds
    */
-  public static void round1(boolean p1GoesFirst) {
+  public static boolean round(boolean p1RoundTurn, int roundNumber) {
     /* raise 3 times before ending round */
     int p1RaiseCounter = 0;
     int cpuRaiseCounter = 0;
 
-    printBoard(true, 3);
-    if (p1GoesFirst) {
-      System.out.println("P1 pays small blind of $10");
-      System.out.println("CPU pays big blind of $20\n\n");
-      gameManager.printDelay(3000);
-      player1.subMoney(10);
-      cpu.subMoney(20);
-      table.addP1Money(10);
-      table.addCPUMoney(20);
+    gameManager.printDelay(DELAY);
+    printBoard(true, roundNumber+2);
+
+    if (p1RoundTurn) {
       while (p1RaiseCounter < 3 && cpuRaiseCounter < 3) {
-        printBoard(true, 3);
         String p1Move = promptUser();
         if (p1Move.equals("fold")) {
-          System.out.println("Round 1 done");
-          return;
+          System.out.println("Round " + roundNumber + " done");
+          gameManager.printDelay(DELAY);
+          p1Turn = false;
+          return true;
         }
         else if (p1Move.equals("raise")) {
           p1RaiseCounter++;
         }
+
         String cpuMove = getCPUMove();
         System.out.println("CPU's move: " + cpuMove + "\n");
         if (cpuMove.equals("fold")) {
-          System.out.println("Round 1 done");
-          return;
+          System.out.println("Round " + roundNumber + " done");
+          gameManager.printDelay(DELAY);
+          p1Turn = false;
+          return true;
         }
         else if (cpuMove.equals("call 0")) {
-          System.out.println("Round 1 done");
-          return;
+          System.out.println("Round " + roundNumber + " done");
+          gameManager.printDelay(DELAY);
+          return false;
         }
         /* cpu raised */
         else {
@@ -72,34 +96,33 @@ public class Play {
       }
     }
     else {
-      System.out.println("P1 pays big blind of $20");
-      System.out.println("CPU pays small blind of $10\n\n");
-      gameManager.printDelay(3000);
-      player1.subMoney(20);
-      cpu.subMoney(10);
-      table.addP1Money(20);
-      table.addCPUMoney(10);
       while (p1RaiseCounter < 3 && cpuRaiseCounter < 3) {
-        printBoard(true, 3);
         String cpuMove = getCPUMove();
         System.out.println("CPU's move: " + cpuMove + "\n");
         if (cpuMove.equals("fold")) {
-          System.out.println("Round 1 done");
-          return;
+          System.out.println("Round " + roundNumber + " done");
+          gameManager.printDelay(DELAY);
+          p1Turn = true;
+          return true;
         }
         else if (cpuMove.equals("raise")) {
           cpuRaiseCounter++;
         }
-        gameManager.printDelay(3000);
+
+        gameManager.printDelay(DELAY);
         printBoard(true, 3);
+
         String p1Move = promptUser();
         if (p1Move.equals("fold")) {
-          System.out.println("Round 1 done");
-          return;
+          System.out.println("Round " + roundNumber + " done");
+          gameManager.printDelay(DELAY);
+          p1Turn = true;
+          return true;
         }
         else if (p1Move.equals("call 0")) {
-          System.out.println("Round 1 done");
-          return;
+          System.out.println("Round " + roundNumber + " done");
+          gameManager.printDelay(DELAY);
+          return false;
         }
         /* p1 raised */
         else {
@@ -107,25 +130,12 @@ public class Play {
         }
       }
     }
-    System.out.println("Round 1 done");
-  }
-
-  /**
-   * p1Turn: if true, prompt user for turn first
-   */
-  public static void round2(boolean p1Turn) {
-    System.out.println("Round 2 done");
-  }
-
-  /**
-   * p1Turn: if true, prompt user for turn first
-   */
-  public static void round3(boolean p1Turn) {
-    System.out.println("Round 3 done");
+    return false;
   }
 
   /**
    * hideCpuCards: if true, cpu cards will be hidden
+   * numOfCardsFaceUp: 3, 4, or 5
    */
   public static void printBoard(boolean hideCpuCards, int numOfCardsFaceUp) {
     player1.printMoney(false);
