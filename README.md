@@ -17,7 +17,7 @@ A terminal-based game
 
 ![Alt text](./readme-pics/readme_3.jpg?raw=true)
 
-4. Type in `cd ` and paste path from 2
+4. Type in `cd ` and paste path from 2 (right click will probably paste)
 
 ![Alt text](./readme-pics/readme_4.jpg?raw=true)
 
@@ -28,3 +28,4 @@ A terminal-based game
 6. Type in `java Play`
 
 ![Alt text](./readme-pics/readme_6.jpg?raw=true)
+
